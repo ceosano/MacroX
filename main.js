@@ -14,7 +14,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
     },
-    fullscreen: true,
+    // fullscreen: true,
   });
 
   mainWindow.loadFile('index.html');
@@ -74,6 +74,7 @@ ipcMain.handle('get-recorded-actions', async (event) => {
 
 ipcMain.on('play-actions', () => {
   recordedActions.forEach((action, index) => {
+    console.log('Playing recorded actions...', index);
     setTimeout(() => {
       try {
         if (action.type === 'mouse') {

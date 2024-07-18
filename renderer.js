@@ -112,7 +112,7 @@ function handleMouseMove(event) {
   const now = performance.now();
   const action = {
     id: now,
-    type: 'mouse move',
+    type: 'mouse',
     x: event.clientX,
     y: event.clientY,
     delay: now - recordStartTime,
@@ -125,7 +125,7 @@ function handleMouseDown(event) {
   const now = performance.now();
   const action = {
     id: now,
-    type: 'mouse click',
+    type: 'mouse',
     x: event.clientX,
     y: event.clientY,
     button: event.button === 0 ? 'left' : 'right',
@@ -140,7 +140,7 @@ function handleMouseUp(event) {
   const now = performance.now();
   const action = {
     id: now,
-    type: 'mouse click',
+    type: 'mouse',
     x: event.clientX,
     y: event.clientY,
     button: event.button === 0 ? 'left' : 'right',
@@ -155,8 +155,9 @@ function handleKeyDown(event) {
   const now = performance.now();
   const action = {
     id: now,
-    type: 'keyboard click',
+    type: 'keyboard',
     key: event.key,
+    state: 'key down',
     delay: now - recordStartTime,
   };
   window.electronAPI.recordAction(action);
