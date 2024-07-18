@@ -12,10 +12,13 @@
   "description": "",
   "devDependencies": {
     "electron": "^31.2.0",
-    "electron-packager": "^17.1.2"
+    "electron-packager": "^17.1.2",
+    "electron-rebuild": "^3.2.9"
   },
   "dependencies": {
     "@jitsi/robotjs": "^0.6.13",
-    "input-event": "^1.2.6"
+    "input-event": "^1.2.6",
+    "iohook": "^0.9.3",
+    "robotjs": "^0.6.0"
   }
 }

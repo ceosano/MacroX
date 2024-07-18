@@ -1,46 +1,45 @@
-const startRecordButton = document.getElementById('start-record-button');
-const stopRecordButton = document.getElementById('stop-record-button');
+const toggleRecordButton = document.getElementById('toggle-record-button'); // Change to a single toggle button
+
+toggleRecordButton.disabled = false;
+let isRecording = false; // State to track recording status
+
+toggleRecordButton.addEventListener('click', () => {
+  isRecording = !isRecording; // Toggle the recording state
+  toggleRecordButton.textContent = isRecording ? 'Stop Recording (ctrl + r)' : 'Start Recording (ctrl + r)'; // Update button text based on state
+  if (isRecording) {
+    recordStartTime = performance.now();
+    // Start recording
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+    // document.addEventListener('mousemove', handleMouseMove);
+    // document.addEventListener('mousedown', handleMouseDown);
+    // document.addEventListener('mouseup', handleMouseUp);
+  } else {
+    // Stop recording
+    document.removeEventListener('keydown', handleKeyDown);
+    document.removeEventListener('keyup', handleKeyUp);
+    // document.removeEventListener('mousemove', handleMouseMove);
+    // document.removeEventListener('mousedown', handleMouseDown);
+    // document.removeEventListener('mouseup', handleMouseUp);
+    window.electronAPI.saveActions(updatedActions);
+  }
+});
+
 const playButton = document.getElementById('play-button');
 const actionsBody = document.getElementById('actions-body');
 const keyInput = document.getElementById('key-input');
 const bindKeyButton = document.getElementById('bind-key-button');
 
-stopRecordButton.disabled = true;
 let recordStartTime = 0;
 let updatedActions = [];
 let isKeyBound = false; // Variable to indicate if a key is bound
 
-startRecordButton.addEventListener('click', () => {
-  recordStartTime = performance.now();
-  startRecordButton.disabled = true;
-  stopRecordButton.disabled = false;
-  isKeyBound = false;
-  document.addEventListener('mousemove', handleMouseMove);
-  document.addEventListener('mousedown', handleMouseDown);
-  document.addEventListener('mouseup', handleMouseUp);
-  document.addEventListener('keydown', handleKeyDown);
-  document.addEventListener('keyup', handleKeyUp);
-});
-
-stopRecordButton.addEventListener('click', () => {
-  startRecordButton.disabled = false;
-  stopRecordButton.disabled = true;
-  isKeyBound = false;
-  document.removeEventListener('mousemove', handleMouseMove);
-  document.removeEventListener('mousedown', handleMouseDown);
-  document.removeEventListener('mouseup', handleMouseUp);
-  document.removeEventListener('keydown', handleKeyDown);
-  document.removeEventListener('keyup', handleKeyUp);
-  window.electronAPI.saveActions(updatedActions);
-});
-
 document.addEventListener('keydown', function (event) {
   if (event.ctrlKey && event.key === 's') {
     event.preventDefault(); // Prevent the default action of Ctrl + S (usually save)
+    isRecording = true;
+    toggleRecordButton.textContent = 'Stop Recording';
     recordStartTime = performance.now();
-    startRecordButton.disabled = true;
-    stopRecordButton.disabled = false;
-    isKeyBound = false;
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mousedown', handleMouseDown);
     document.addEventListener('mouseup', handleMouseUp);
@@ -48,6 +47,8 @@ document.addEventListener('keydown', function (event) {
     document.addEventListener('keyup', handleKeyUp);
   } else if (event.ctrlKey && event.key === 't') {
     event.preventDefault(); // Prevent the default action of Ctrl + S (usually save)
+    isRecording = false;
+    toggleRecordButton.textContent = 'Start Recording';
     startRecordButton.disabled = false;
     stopRecordButton.disabled = true;
     isKeyBound = false;
@@ -203,4 +204,27 @@ window.electronAPI.onUpdateActions((event, actions) => {
   } catch (error) {
     console.error('Error updating actions:', error);
   }
+});
+
+const { ipcRenderer } = require('electron');
+
+ipcRenderer.on('toggle-recording', (event, isRecording) => {
+    if (isRecording) {
+        // Start recording
+        document.addEventListener('keydown', handleKeyDown);
+        document.addEventListener('keyup', handleKeyUp);
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mousedown', handleMouseDown);
+        document.addEventListener('mouseup', handleMouseUp);
+        toggleRecordButton.textContent = 'Stop Recording';
+    } else {
+        // Stop recording
+        document.removeEventListener('keydown', handleKeyDown);
+        document.removeEventListener('keyup', handleKeyUp);
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mousedown', handleMouseDown);
+        document.removeEventListener('mouseup', handleMouseUp);
+        toggleRecordButton.textContent = 'Start Recording';
+        window.electronAPI.saveActions(updatedActions);
+    }
 });
