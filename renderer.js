@@ -184,7 +184,7 @@ function updateActionsList(action) {
     <td><div class="cell-wrapper ${!action.x || action.x === "" ? "none-background" : ""}">${action.x || ''}</div></td>
     <td><div class="cell-wrapper ${!action.y || action.y === "" ? "none-background" : ""}">${action.y || ''}</div></td>
     <td><div class="cell-wrapper ${!action.key || action.key === "" ? "none-background" : ""}">${action.key || ''}</div></td>
-    <td><div class="cell-wrapper ${!action.button || action.button === "" ? "none-background" : ""}">${action.button || ''} ${action.state || ''}</div></td>
+    <td><div class="cell-wrapper ${!action.state || action.state === "" ? "none-background" : ""}">${action.button || ''} ${action.state || ''}</div></td>
     <td><div class="cell-wrapper">${action.delay.toFixed(2)}</div></td>
     <td>
       <button class="delete-button" data-action-id="${action.id}">Delete</button>
