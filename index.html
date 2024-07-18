@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mouse and Keyboard Recorder</title>
+  <link rel="stylesheet" type="text/css" href="./styles.css">
+</head>
+
+<body>
+  <div class="record-container">
+    <button id="start-record-button">Start Recording(Ctrl + s)</button>
+    <button id="stop-record-button">Stop Recording(Ctrl + t)</button>
+    <table id="actions-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>X</th>
+          <th>Y</th>
+          <th>Key</th>
+          <th>State</th>
+          <th>Delay</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="actions-body"></tbody>
+    </table>
+  </div>
+  <h1>Assign Key to Macro</h1>
+  <div class="bind-container">
+    <input id="key-input" type="text" placeholder="Enter key to bind macro">
+    <button id="bind-key-button">Bind Key</button>
+    <!-- <button id="play-button">Play</button> -->
+  </div>
+  <script src="renderer.js"></script>
+</body>
+
+</html>
