@@ -14,6 +14,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
     },
+    fullscreen: true,
   });
 
   mainWindow.loadFile('index.html');
@@ -32,6 +33,8 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+app.disableHardwareAcceleration();
 
 ipcMain.on('record-action', (event, action) => {
   recordedActions.push(action);
@@ -75,22 +78,33 @@ ipcMain.on('play-actions', () => {
       try {
         if (action.type === 'mouse') {
           if (typeof action.x === 'number' && typeof action.y === 'number') {
-            robot.moveMouse(action.x, action.y);
-            robot.mouseToggle(action.button, action.state);
+            console.log(`Executing mouse action at (${action.button}, ${action.state})`); // Debugging
+            try {
+              robot.moveMouse(action.x, action.y);
+            } catch (error) {
+              console.error('Error executing moveMouse:', error);
+              return; // Stop execution to prevent further errors
+            }
+            try {
+              robot.mouseToggle(action.button, action.state);
+            } catch (error) {
+              console.error('Error executing mouseToggle:', error);
+            }
           } else {
             throw new Error('Invalid mouse action coordinates or parameters');
           }
         } else if (action.type === 'keyboard') {
           if (typeof action.key === 'string') {
+            console.log(`Executing keyboard action for key: ${action.key}`); // Debugging
             robot.keyTap(action.key);
-          } else {
+          } else {ß
             throw new Error('Invalid keyboard action key');
           }
         }
       } catch (error) {
         console.error('Error executing action:', error);
       }
-    }, action.delay || 0 + index * 100); // Adding a base delay to ensure actions are not all executed at once
+    }, (action.delay || 0) + index * 100); // Adding a base delay to ensure actions are not all executed at once
   });
 });
 

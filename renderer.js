@@ -1,6 +1,6 @@
 const startRecordButton = document.getElementById('start-record-button');
 const stopRecordButton = document.getElementById('stop-record-button');
-// const playButton = document.getElementById('play-button');
+const playButton = document.getElementById('play-button');
 const actionsBody = document.getElementById('actions-body');
 const keyInput = document.getElementById('key-input');
 const bindKeyButton = document.getElementById('bind-key-button');
@@ -15,7 +15,7 @@ startRecordButton.addEventListener('click', () => {
   startRecordButton.disabled = true;
   stopRecordButton.disabled = false;
   isKeyBound = false;
-  // document.addEventListener('mousemove', handleMouseMove);
+  document.addEventListener('mousemove', handleMouseMove);
   document.addEventListener('mousedown', handleMouseDown);
   document.addEventListener('mouseup', handleMouseUp);
   document.addEventListener('keydown', handleKeyDown);
@@ -26,7 +26,7 @@ stopRecordButton.addEventListener('click', () => {
   startRecordButton.disabled = false;
   stopRecordButton.disabled = true;
   isKeyBound = false;
-  // document.removeEventListener('mousemove', handleMouseMove);
+  document.removeEventListener('mousemove', handleMouseMove);
   document.removeEventListener('mousedown', handleMouseDown);
   document.removeEventListener('mouseup', handleMouseUp);
   document.removeEventListener('keydown', handleKeyDown);
@@ -60,9 +60,9 @@ document.addEventListener('keydown', function (event) {
   }
 });
 
-// playButton.addEventListener('click', () => {
-//   window.electronAPI.playActions();
-// });
+playButton.addEventListener('click', () => {
+  window.electronAPI.playActions();
+});
 
 // Step 1: Capture the Key Input
 let bindKey = ''; // Variable to store the key to bind
@@ -112,10 +112,9 @@ function handleMouseMove(event) {
   const now = performance.now();
   const action = {
     id: now,
-    type: 'mouse',
+    type: 'mouse move',
     x: event.clientX,
     y: event.clientY,
-    state: 'move',
     delay: now - recordStartTime,
   };
   window.electronAPI.recordAction(action);
@@ -126,11 +125,11 @@ function handleMouseDown(event) {
   const now = performance.now();
   const action = {
     id: now,
-    type: 'mouse',
+    type: 'mouse click',
     x: event.clientX,
     y: event.clientY,
-    button: event.button,
-    state: event.button === 0 ? 'left down' : 'right down',
+    button: event.button === 0 ? 'left' : 'right',
+    state: 'down',
     delay: now - recordStartTime,
   };
   window.electronAPI.recordAction(action);
@@ -141,11 +140,11 @@ function handleMouseUp(event) {
   const now = performance.now();
   const action = {
     id: now,
-    type: 'mouse',
+    type: 'mouse click',
     x: event.clientX,
     y: event.clientY,
-    button: event.button,
-    state: event.button === 0 ? 'left up' : 'right up',
+    button: event.button === 0 ? 'left' : 'right',
+    state: 'up',
     delay: now - recordStartTime,
   };
   window.electronAPI.recordAction(action);
@@ -156,9 +155,8 @@ function handleKeyDown(event) {
   const now = performance.now();
   const action = {
     id: now,
-    type: 'keyboard',
+    type: 'keyboard click',
     key: event.key,
-    state: 'key down',
     delay: now - recordStartTime,
   };
   window.electronAPI.recordAction(action);
@@ -185,7 +183,7 @@ function updateActionsList(action) {
     <td><div class="cell-wrapper ${!action.x || action.x === "" ? "none-background" : ""}">${action.x || ''}</div></td>
     <td><div class="cell-wrapper ${!action.y || action.y === "" ? "none-background" : ""}">${action.y || ''}</div></td>
     <td><div class="cell-wrapper ${!action.key || action.key === "" ? "none-background" : ""}">${action.key || ''}</div></td>
-    <td><div class="cell-wrapper ">${action.state || ''}</div></td>
+    <td><div class="cell-wrapper ${!action.button || action.button === "" ? "none-background" : ""}">${action.button || ''} ${action.state || ''}</div></td>
     <td><div class="cell-wrapper">${action.delay.toFixed(2)}</div></td>
     <td>
       <button class="delete-button" data-action-id="${action.id}">Delete</button>
