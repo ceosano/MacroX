@@ -41,7 +41,7 @@ document.addEventListener('keydown', function (event) {
     startRecordButton.disabled = true;
     stopRecordButton.disabled = false;
     isKeyBound = false;
-    // document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mousedown', handleMouseDown);
     document.addEventListener('mouseup', handleMouseUp);
     document.addEventListener('keydown', handleKeyDown);
@@ -51,7 +51,7 @@ document.addEventListener('keydown', function (event) {
     startRecordButton.disabled = false;
     stopRecordButton.disabled = true;
     isKeyBound = false;
-    // document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mousedown', handleMouseDown);
     document.removeEventListener('mouseup', handleMouseUp);
     document.removeEventListener('keydown', handleKeyDown);

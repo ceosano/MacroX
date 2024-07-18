@@ -74,22 +74,14 @@ ipcMain.handle('get-recorded-actions', async (event) => {
 
 ipcMain.on('play-actions', () => {
   recordedActions.forEach((action, index) => {
-    console.log('Playing recorded actions...', index);
     setTimeout(() => {
       try {
         if (action.type === 'mouse') {
           if (typeof action.x === 'number' && typeof action.y === 'number') {
             console.log(`Executing mouse action at (${action.button}, ${action.state})`); // Debugging
-            try {
-              robot.moveMouse(action.x, action.y);
-            } catch (error) {
-              console.error('Error executing moveMouse:', error);
-              return; // Stop execution to prevent further errors
-            }
-            try {
-              robot.mouseToggle(action.button, action.state);
-            } catch (error) {
-              console.error('Error executing mouseToggle:', error);
+            robot.moveMouse(action.x, action.y);
+            if(action.button != undefined && action.state != undefined) {
+              robot.mouseToggle(action.state, action.button);
             }
           } else {
             throw new Error('Invalid mouse action coordinates or parameters');
@@ -97,8 +89,13 @@ ipcMain.on('play-actions', () => {
         } else if (action.type === 'keyboard') {
           if (typeof action.key === 'string') {
             console.log(`Executing keyboard action for key: ${action.key}`); // Debugging
-            robot.keyTap(action.key);
-          } else {ß
+            if (action.key.toLowerCase() === 'control') {
+              robot.keyToggle('control', 'down');
+              robot.keyToggle('control', 'up');
+            } else {
+              robot.keyTap(action.key);
+            }
+          } else {
             throw new Error('Invalid keyboard action key');
           }
         }
