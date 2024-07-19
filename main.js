@@ -11,6 +11,27 @@ let recordedActions = []; // Initialize an empty array to store recorded actions
 
 let isRecording = false; // State to track recording status
 
+const { GlobalKeyboardListener } = require('node-global-key-listener');
+const keyboardListener = new GlobalKeyboardListener();
+const keyHandler = event => {
+  console.log('name:', event.name);
+  console.log('state:', event.state);
+  console.log('raw:', event._raw);
+  // mainWindow.webContents.send('keyupevent', event.name);
+};
+
+function switchHooking(flag) {
+  if (flag)
+    keyboardListener.addListener(keyHandler);
+  else
+    keyboardListener.removeListener(keyHandler);
+}
+
+// Set up IPC listener
+ipcMain.handle('call-switch-function', async (event, data) => {
+  switchHooking(data);
+});
+
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,

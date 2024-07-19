@@ -6,4 +6,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   saveActions: (actions) => ipcRenderer.send('save-actions', actions),
   onUpdateActions: (callback) => ipcRenderer.on('update-actions', callback),
   deleteAction: (actionId) => ipcRenderer.send('delete-action', actionId),
+  callSwitchFunction: async (flag) => {
+    const result = await ipcRenderer.invoke('call-switch-function', flag);
+    return result;
+  },
 });

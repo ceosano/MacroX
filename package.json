@@ -18,7 +18,10 @@
   "dependencies": {
     "@jitsi/robotjs": "^0.6.13",
     "input-event": "^1.2.6",
-    "iohook": "^0.9.3",
+    "keycode": "^2.2.1",
+    "lepikevents": "^2.0.5",
+    "lepikjs": "^3.3.0",
+    "node-global-key-listener": "^0.3.0",
     "robotjs": "^0.6.0"
   }
 }
