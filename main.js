@@ -14,10 +14,8 @@ let isRecording = false; // State to track recording status
 const { GlobalKeyboardListener } = require('node-global-key-listener');
 const keyboardListener = new GlobalKeyboardListener();
 const keyHandler = event => {
-  console.log('name:', event.name);
-  console.log('state:', event.state);
-  console.log('raw:', event._raw);
-  // mainWindow.webContents.send('keyupevent', event.name);
+  // console.log('json:', event);
+  mainWindow.webContents.send('key-pressed', event);
 };
 
 function switchHooking(flag) {

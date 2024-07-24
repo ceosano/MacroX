@@ -10,4 +10,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     const result = await ipcRenderer.invoke('call-switch-function', flag);
     return result;
   },
+  onKeyPressed: (callback) => ipcRenderer.on('key-pressed', (_event, value) => callback(value)),
 });

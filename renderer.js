@@ -106,62 +106,6 @@ function handleMouseMove(event) {
   updateActionsList(action);
 }
 
-function handleMouseDown(event) {
-  const now = performance.now();
-  const action = {
-    id: now,
-    type: 'mouse',
-    x: event.clientX,
-    y: event.clientY,
-    button: event.button === 0 ? 'left' : 'right',
-    state: 'down',
-    delay: now - recordStartTime,
-  };
-  window.electronAPI.recordAction(action);
-  updateActionsList(action);
-}
-
-function handleMouseUp(event) {
-  const now = performance.now();
-  const action = {
-    id: now,
-    type: 'mouse',
-    x: event.clientX,
-    y: event.clientY,
-    button: event.button === 0 ? 'left' : 'right',
-    state: 'up',
-    delay: now - recordStartTime,
-  };
-  window.electronAPI.recordAction(action);
-  updateActionsList(action);
-}
-
-function handleKeyDown(key) {
-  const now = performance.now();
-  const action = {
-    id: now,
-    type: 'keyboard',
-    key: key,
-    state: 'key down',
-    delay: now - recordStartTime,
-  };
-  window.electronAPI.recordAction(action);
-  updateActionsList(action);
-}
-
-function handleKeyUp(key) {
-  const now = performance.now();
-  const action = {
-    id: now,
-    type: 'keyboard',
-    key: key,
-    state: 'key up',
-    delay: now - recordStartTime,
-  };
-  window.electronAPI.recordAction(action);
-  updateActionsList(action);
-}
-
 function updateActionsList(action) {
   const row = document.createElement('tr');
   row.innerHTML = `
@@ -190,18 +134,41 @@ window.electronAPI.onUpdateActions((event, actions) => {
   }
 });
 
-const { ipcRenderer } = require('electron');
+window.electronAPI.onKeyPressed((event) => {
+  let action = {};
+  const now = performance.now();
+  const type = event._raw.split(",")[0].toLowerCase();
+  const key = event.name;
+  let state = '';
+  let button = '';
+  if (type === 'keyboard') {
+    state = `key ${event.state.toLowerCase()}`;
+    action = {
+      id: now,
+      type: type,
+      key: key,
+      state: state,
+      delay: now - recordStartTime,
+    };
+  } else if (type === 'mouse') {
+    state = event.state.toLowerCase();
+    button = event.name.split(" ").pop().toLowerCase();
+    action = {
+      id: now,
+      type: type,
+      x: event.location[0],
+      y: event.location[1],
+      button: button,
+      state: 'up',
+      delay: now - recordStartTime,
+    };
+  }
+  // console.log(action);
+  window.electronAPI.recordAction(action);
+  updateActionsList(action);
+});
 
-ipcRenderer.on('keyupevent', (event, key) => {
-  console.log('uphere');
-  console.log(event);
-  console.log(key);
-  // handleKeyUp(key);
-});
-ipcRenderer.on('keydownevent', function (event, key) {
-  console.log('downhere');
-  console.log(key);
-});
+const { ipcRenderer } = require('electron');
 
 ipcRenderer.on('toggle-recording', async (event, isRecording) => {
     if (isRecording) {
