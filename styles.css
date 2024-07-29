@@ -15,7 +15,7 @@ button {
 }
 
 .record-container {
-  height: 75vh;
+  height: 70vh;
   min-height: 350px;
   padding: 20px;
   background: #333333;
@@ -65,9 +65,20 @@ h1 {
 .bind-container input {
   font-size: 13px;
   padding: 4px;
+  margin-left: 60px;
 }
 
 .delete-button {
   background: #f44336;
   color: white;
+}
+
+#play-button {
+  visibility: hidden;
+}
+
+.note {
+  color: white;
+  text-align: center;
+  font-size: 12px;
 }
